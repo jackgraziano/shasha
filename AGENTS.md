@@ -65,14 +65,18 @@ the Linux, macOS, and Windows checks. When a task explicitly requests a push:
    git push origin HEAD:refs/heads/validate/<topic>
    ```
 
-2. wait for all required checks on that exact commit to succeed;
-3. fast-forward the same commit to `main`:
+2. open a pull request from the validation branch to `main` so that GitHub runs
+   CodeQL against the exact mined commit;
+3. wait for the Linux, macOS, Windows, and CodeQL checks on that exact commit to
+   succeed;
+4. fast-forward the same commit to `main`:
 
    ```sh
    git push origin HEAD:main
    ```
 
-4. delete the remote validation branch after the protected push succeeds.
+5. close the pull request without merging it, then delete the remote validation
+   branch after the protected push succeeds.
 
 Do not use GitHub's merge, squash, or rebase buttons for this repository. Each
 of those operations can create a different commit ID without remining it, which
