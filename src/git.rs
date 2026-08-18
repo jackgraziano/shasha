@@ -215,7 +215,7 @@ impl Repository {
             let path = self.git_dir.join(state);
             if path.exists() {
                 bail!(
-                    "a Git operation is in progress ({state}); finish or abort it before running shasha"
+                    "a Git operation is in progress ({state}); finish or abort it before running git shasha"
                 );
             }
         }

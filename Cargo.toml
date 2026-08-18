@@ -3,11 +3,19 @@ name = "shasha"
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.85"
-description = "Create Git commits that contain their own abbreviated object ID"
+description = "A Git extension for commits that contain their own abbreviated object ID"
 license = "MIT"
 readme = "README.md"
 keywords = ["git", "commit", "hash", "sha", "cli"]
 categories = ["command-line-utilities", "development-tools"]
+
+[[bin]]
+name = "shasha"
+path = "src/main.rs"
+
+[[bin]]
+name = "git-shasha"
+path = "src/bin/git-shasha.rs"
 
 [dependencies]
 anyhow = "1.0"

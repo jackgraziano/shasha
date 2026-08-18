@@ -1,3 +1,4 @@
+use std::env;
 use std::fs;
 use std::path::Path;
 use std::process::{Command, Output};
@@ -59,6 +60,55 @@ fn run_shasha(directory: &Path, prefix_len: u8, message: &str) -> Output {
         ])
         .output()
         .expect("shasha should run")
+}
+
+fn run_git_shasha(directory: &Path, prefix_len: u8, message: &str) -> Output {
+    let extension = Path::new(env!("CARGO_BIN_EXE_git-shasha"));
+    let mut paths = vec![
+        extension
+            .parent()
+            .expect("git-shasha should have a parent directory")
+            .to_path_buf(),
+    ];
+    if let Some(current_path) = env::var_os("PATH") {
+        paths.extend(env::split_paths(&current_path));
+    }
+    let path = env::join_paths(paths).expect("the test PATH should be valid");
+
+    Command::new("git")
+        .current_dir(directory)
+        .env("PATH", path)
+        .args([
+            "shasha",
+            "--length",
+            &prefix_len.to_string(),
+            "--threads",
+            "2",
+            "-m",
+            message,
+        ])
+        .output()
+        .expect("git shasha should run")
+}
+
+#[test]
+fn git_dispatches_to_the_git_shasha_extension() {
+    let repository = init_repository(None).expect("SHA-1 repositories should be supported");
+    fs::write(repository.path().join("app.txt"), "extension\n").unwrap();
+    git_ok(repository.path(), &["add", "app.txt"]);
+
+    let run = run_git_shasha(repository.path(), 2, "commit through Git");
+    assert!(
+        run.status.success(),
+        "{}",
+        String::from_utf8_lossy(&run.stderr)
+    );
+
+    let oid = git_ok(repository.path(), &["rev-parse", "HEAD"]);
+    let prefix = fs::read_to_string(repository.path().join(".shasha")).unwrap();
+    assert!(oid.starts_with(prefix.trim()));
+    assert_eq!(git_ok(repository.path(), &["status", "--porcelain"]), "");
+    git_ok(repository.path(), &["fsck", "--strict"]);
 }
 
 #[test]

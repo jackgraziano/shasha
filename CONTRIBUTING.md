@@ -10,6 +10,10 @@ Install a current stable Rust toolchain and Git, then run:
 cargo test --all-targets
 ```
 
+The package builds both `git-shasha`, used by Git when someone invokes
+`git shasha`, and the backwards-compatible `shasha` executable. Keep their
+behavior in sync by implementing command-line behavior in `src/cli.rs`.
+
 Before opening a pull request, run the complete local checks:
 
 ```sh
@@ -28,4 +32,3 @@ varies substantially across machines and object formats.
 Include the Shasha version, `git --version`, operating system, object format
 from `git rev-parse --show-object-format`, and the complete error message.
 Never attach a repository containing secrets solely to reproduce a bug.
-

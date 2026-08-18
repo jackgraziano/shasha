@@ -1,3 +1,4 @@
+mod cli;
 mod git;
 mod miner;
 #[cfg(target_arch = "aarch64")]
@@ -15,6 +16,9 @@ use crate::git::Repository;
 use crate::miner::{MineRequest, mine};
 
 pub use crate::git::ObjectFormat;
+
+#[doc(hidden)]
+pub use crate::cli::main as cli_main;
 
 const NONCE_LABEL: &str = "Shasha-Nonce: ";
 const NONCE_HEX_LEN: usize = 16;
