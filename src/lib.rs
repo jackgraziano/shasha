@@ -22,6 +22,7 @@ pub use crate::cli::main as cli_main;
 
 const NONCE_LABEL: &str = "Shasha-Nonce: ";
 const NONCE_HEX_LEN: usize = 16;
+const DEFAULT_PREFIX_LEN: u8 = 6;
 
 #[derive(Debug, Clone)]
 pub struct CommitOptions {
@@ -36,7 +37,7 @@ impl Default for CommitOptions {
         Self {
             message: String::new(),
             version_file: PathBuf::from(".shasha"),
-            prefix_len: 5,
+            prefix_len: DEFAULT_PREFIX_LEN,
             threads: std::thread::available_parallelism()
                 .map(usize::from)
                 .unwrap_or(1),
@@ -272,6 +273,11 @@ fn finish_commit_body(mut body_prefix: Vec<u8>, nonce: u64) -> Vec<u8> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn default_prefix_is_six_characters() {
+        assert_eq!(CommitOptions::default().prefix_len, 6);
+    }
 
     #[test]
     fn target_has_requested_width() {

@@ -3,15 +3,15 @@
 Shasha is an external Git command that creates self-identifying commits.
 
 When Shasha creates a commit, it writes an abbreviated form of that commit's
-object ID to `.shasha` **inside the same commit**. With the default five-character
+object ID to `.shasha` **inside the same commit**. With the default six-character
 prefix, the result has this invariant:
 
 ```text
 $ git show HEAD:.shasha
-7e3a1
+7e3a1f
 
 $ git rev-parse HEAD
-7e3a1e4...
+7e3a1f4...
 ```
 
 The value stored in `.shasha` is a prefix, not the complete object ID. The full
@@ -31,9 +31,9 @@ of `git commit -m`:
 ```text
 $ git add src/
 $ git shasha -m "Add the landing page"
-[main 7e3a1] Add the landing page
-mined 934201 candidates in 5.2ms (179.7 MH/s)
-.shasha contains 7e3a1; full commit is 7e3a1e4...
+[main 7e3a1f] Add the landing page
+mined 9342012 candidates in 52.0ms (179.7 MH/s)
+.shasha contains 7e3a1f; full commit is 7e3a1f4...
 ```
 
 No Git alias, hook, or patched Git installation is required.
@@ -106,7 +106,7 @@ Supported Shasha options:
 -m, --message <MESSAGE>  Commit message; repeat to create paragraphs
 -F, --file <PATH>        Read the commit message from a file, or '-' for stdin
     --sha-file <PATH>    Version file relative to the repository root [default: .shasha]
-    --length <N>         Number of hexadecimal prefix characters to mine [default: 5]
+    --length <N>         Number of hexadecimal prefix characters to mine [default: 6]
     --threads <N>        Mining threads [default: available parallelism]
 ```
 
@@ -158,9 +158,9 @@ use the portable RustCrypto backend.
 
 ## Prefix length and cost
 
-The default prefix is five hexadecimal characters, or 20 bits. It takes
-1,048,576 candidate hashes on average. Each additional character multiplies the
-expected work by 16.
+The default prefix is six hexadecimal characters, or 24 bits. It takes
+16,777,216 candidate hashes on average. Each additional character multiplies
+the expected work by 16.
 
 | Characters | Expected candidates |
 | ---: | ---: |
@@ -170,7 +170,7 @@ expected work by 16.
 | 7 | 268,435,456 |
 | 8 | 4,294,967,296 |
 
-Five characters are convenient but not globally unique. Shasha avoids a prefix
+Six characters are convenient but not globally unique. Shasha avoids a prefix
 already used by an object at creation time, but a future object can still
 acquire the same prefix. Git may then require more characters to disambiguate
 the revision; the full object ID remains authoritative.

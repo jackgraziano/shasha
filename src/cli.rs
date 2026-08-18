@@ -6,7 +6,7 @@ use std::process::ExitCode;
 use anyhow::{Context, Result, bail};
 use clap::{CommandFactory, FromArgMatches, Parser};
 
-use crate::{CommitOptions, create_commit};
+use crate::{CommitOptions, DEFAULT_PREFIX_LEN, create_commit};
 
 #[derive(Debug, Parser)]
 #[command(
@@ -32,7 +32,7 @@ struct Cli {
     sha_file: PathBuf,
 
     /// Number of hexadecimal prefix characters to mine.
-    #[arg(long, default_value_t = 5, value_name = "N")]
+    #[arg(long, default_value_t = DEFAULT_PREFIX_LEN, value_name = "N")]
     length: u8,
 
     /// Number of mining threads. Defaults to the available parallelism.
