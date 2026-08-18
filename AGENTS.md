@@ -54,6 +54,31 @@ currently six characters.
 
 Do not push, force-push, tag, or publish unless the task explicitly requests it.
 
+## Publishing through protected `main`
+
+The `main` branch requires the exact commit being pushed to have already passed
+the Linux, macOS, and Windows checks. When a task explicitly requests a push:
+
+1. push `HEAD` to a short-lived validation branch, for example:
+
+   ```sh
+   git push origin HEAD:refs/heads/validate/<topic>
+   ```
+
+2. wait for all required checks on that exact commit to succeed;
+3. fast-forward the same commit to `main`:
+
+   ```sh
+   git push origin HEAD:main
+   ```
+
+4. delete the remote validation branch after the protected push succeeds.
+
+Do not use GitHub's merge, squash, or rebase buttons for this repository. Each
+of those operations can create a different commit ID without remining it, which
+would make `.shasha` incorrect. Pull requests may still be used for discussion,
+but their reviewed commit must reach `main` unchanged through a fast-forward.
+
 ## Required validation
 
 Before committing, run the same core checks as CI:
