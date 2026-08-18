@@ -6,6 +6,10 @@ rust-version = "1.85"
 description = "A Git extension for commits that contain their own abbreviated object ID"
 license = "MIT"
 readme = "README.md"
+repository = "https://github.com/jackgraziano/shasha"
+homepage = "https://github.com/jackgraziano/shasha"
+documentation = "https://docs.rs/shasha"
+exclude = ["/.github", "/.shasha", "/AGENTS.md", "/CLAUDE.md"]
 keywords = ["git", "commit", "hash", "sha", "cli"]
 categories = ["command-line-utilities", "development-tools"]
 

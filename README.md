@@ -17,12 +17,25 @@ $ git rev-parse HEAD
 The value stored in `.shasha` is a prefix, not the complete object ID. The full
 object ID remains Git's authoritative identifier.
 
+## Why?
+
+Builds often need a revision they can display at runtime, even when the `.git`
+directory is unavailable. CI can inject that value, but a tracked file also
+travels naturally through source archives, container build contexts, and copied
+working trees.
+
+Writing a commit's object ID into a tracked file appears circular: changing the
+file changes the tree, which changes the commit. Shasha turns that circularity
+into a finite search. It places a candidate prefix in `.shasha`, varies a nonce
+inside the commit, and stops when the resulting object ID begins with the same
+prefix.
+
 ## Quick start
 
-Install the extension from this checkout:
+Install the extension from crates.io:
 
 ```sh
-cargo install --path .
+cargo install shasha
 ```
 
 For an ordinary commit of already-staged changes, use `git shasha -m` in place
