@@ -323,7 +323,10 @@ impl Repository {
         let temporary_path = temporary.into_temp_path();
         let output = Command::new("git")
             .current_dir(&self.root)
-            .env("GIT_INDEX_FILE", &temporary_path)
+            // `canonicalize` returns an extended `\\?\` path on Windows.
+            // Rust accepts it, but Git for Windows cannot create the adjacent
+            // `.lock` file unless it receives the equivalent DOS-style path.
+            .env("GIT_INDEX_FILE", dunce::simplified(temporary_path.as_ref()))
             .arg("write-tree")
             .output()
             .context("could not execute git write-tree")?;
